@@ -19,11 +19,11 @@
           {{ text }}
         </div>
         <div slot="action" slot-scope="{text, record}">
-          <a @click="deleteRecord(record.key)">
+          <a @click="deleteRecord(record.no)">
             <a-icon type="delete"/>
             删除
           </a>
-          <router-link :to="`/list/question/detail/${record.key}`">详情</router-link>
+          <router-link :to="`/list/question/detail/${record.no}`">详情</router-link>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -36,7 +36,7 @@
 <script>
 import StandardTable from '@/components/table/StandardTable'
 // import {METHOD, request} from "@/utils/request";
-import {GET_ALL_GAOGUAN} from '@/services/api'
+import {GET_ALL_GAOGUAN, DELETE_GAOGUAN} from '@/services/api'
 import {METHOD, request} from "@/utils/request";
 import Cookie from "js-cookie";
 
@@ -72,15 +72,6 @@ const columns = [
 const dataSource = []
 let current_page = 1
 
-// let total_data = 0
-// let current = 0
-// let pageSize = 0
-// const pagination = computed(() => ({
-//   total: total_data,
-//   current: current,
-//   pageSize: pageSize,
-// }));
-
 export default {
   name: 'GaoguanList',
   components: {StandardTable},
@@ -94,16 +85,34 @@ export default {
       pagination: {},
     }
   },
-  authorize: {
-    deleteRecord: 'delete'
-  },
+  // authorize: {
+  //   deleteRecord: 'delete'
+  // },
   beforeMount() {
     this.data_updata()
   },
   methods: {
     deleteRecord(key) {
-      this.dataSource = this.dataSource.filter(item => item.key !== key)
-      this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+      console.log(key)
+      var searchParams = new URLSearchParams();
+      searchParams.append('gaoguan_ids', key)
+      request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
+        console.log(res);
+        if(res.data.code === 200){
+          this.$message.info(res.data.msg)
+          this.data_updata();
+        }else{
+          this.$message.info(res.data.msg)
+        }
+
+
+      })
+      // this.dataSource = this.dataSource.filter(item => item.key !== key)
+      // this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+    },
+    remove() {
+      this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)
+      this.selectedRows = []
     },
     data_updata(){
       this.loading = true
@@ -140,10 +149,6 @@ export default {
       console.log('reset')
       console.log(Cookie.get('Authorization'))
       this.dataSource.splice(0, this.dataSource.length);
-      this.selectedRows = []
-    },
-    remove() {
-      this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)
       this.selectedRows = []
     },
     onClear() {
