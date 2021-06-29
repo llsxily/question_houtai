@@ -8,4 +8,5 @@ module.exports = {
   GOODS: `${BASE_URL}/goods`,
   GOODS_COLUMNS: `${BASE_URL}/columns`,
   GET_ALL_QUESTION: `${BASE_URL}/get_all_question/`,
+  GET_ALL_GAOGUAN: `${BASE_URL}/get_gaoguanmail/`,
 }

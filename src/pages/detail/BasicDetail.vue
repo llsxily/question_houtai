@@ -1,19 +1,12 @@
 <template>
     <page-layout title="基础详情页">
       <a-card :bordered="false">
-        <detail-list title="退款详情">
-          <detail-list-item term="取货单号">1000000000</detail-list-item>
-          <detail-list-item term="状态">已取货</detail-list-item>
-          <detail-list-item term="销售单号">987654321</detail-list-item>
-          <detail-list-item term="子订单">1234567890</detail-list-item>
-        </detail-list>
-        <a-divider style="margin-bottom: 32px"/>
-        <detail-list title="用户信息">
-          <detail-list-item term="用户姓名">付小小</detail-list-item>
-          <detail-list-item term="联系电话">18100000001</detail-list-item>
-          <detail-list-item term="常用快递">菜鸟仓储</detail-list-item>
-          <detail-list-item term="取货地址">浙江省杭州市西湖区万塘路19号</detail-list-item>
-          <detail-list-item term="备注">无</detail-list-item>
+        <detail-list title="邮件详情">
+          <detail-list-item term="记录编号">付小小</detail-list-item>
+          <detail-list-item term="高管信箱标题">18100000001</detail-list-item>
+          <detail-list-item term="提问人真实姓名">菜鸟仓储</detail-list-item>
+          <detail-list-item term="是否匿名发布">浙江省杭州市西湖区万塘路19号</detail-list-item>
+          <detail-list-item term="高管信箱内容">无</detail-list-item>
         </detail-list>
         <a-divider style="margin-bottom: 32px"/>
         <div class="title">退货商品</div>
@@ -194,6 +187,8 @@ export default {
       scheduleColumns,
       scheduleData
     }
+  },create() {
+    console.log(this.$route.query)
   }
 }
 </script>

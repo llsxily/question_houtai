@@ -3,6 +3,8 @@
     <div>
       <a-space class="operator">
         <a-button @click="addNew" type="primary">删除</a-button>
+        <a-button @click="addNew" type="primary">导出选中</a-button>
+        <a-button @click="addNew" type="primary">全部导出</a-button>
       </a-space>
       <standard-table
           :columns="columns"
@@ -21,7 +23,7 @@
             <a-icon type="delete"/>
             删除
           </a>
-          <router-link :to="`/list/query/detail/${record.key}`">详情</router-link>
+          <router-link :to="`/list/question/detail/${record.key}`">详情</router-link>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -34,7 +36,7 @@
 <script>
 import StandardTable from '@/components/table/StandardTable'
 // import {METHOD, request} from "@/utils/request";
-import {GET_ALL_QUESTION} from '@/services/api'
+import {GET_ALL_GAOGUAN} from '@/services/api'
 import {METHOD, request} from "@/utils/request";
 import Cookie from "js-cookie";
 
@@ -60,10 +62,6 @@ const columns = [
   {
     title: '是否匿名',
     dataIndex: 'is_nimin',
-  },
-  {
-    title: '发布时间',
-    dataIndex: 'time',
   },
   {
     title: '操作',
@@ -111,7 +109,7 @@ export default {
       this.loading = true
       var searchParams = new URLSearchParams();
       searchParams.append('page', current_page)
-      request(GET_ALL_QUESTION, METHOD.GET, searchParams).then((res) => {
+      request(GET_ALL_GAOGUAN, METHOD.GET, searchParams).then((res) => {
         console.log(res.data)
         if (res.data.code === 200) {
           let data_list = res.data.data.data
@@ -125,12 +123,11 @@ export default {
             console.log(data_list[i])
             dataSource.push({
               key: i,
-              no: data_list[i]['question_id'],
-              title: data_list[i]['question_title'],
-              detail: data_list[i]['question_detail'].length > 12 ? data_list[i]['question_detail'].substr(0, 12) + '...' : data_list[i]['question_detail'],
-              name: data_list[i]['question_user_name'],
-              time: data_list[i]['question_time'],
-              is_nimin: data_list[i]['question_is_nimin'] === '1' ? '是' : '否',
+              no: data_list[i]['gaoguan_id'],
+              title: data_list[i]['gaoguan_title'],
+              detail: data_list[i]['gaoguan_detail'].length > 12 ? data_list[i]['gaoguan_detail'].substr(0, 12) + '...' : data_list[i]['gaoguan_detail'],
+              name: data_list[i]['gaoguan_user_name'],
+              is_nimin: data_list[i]['gaoguan_is_nimin'] === '1' ? '是' : '否',
             })
           }
         }
