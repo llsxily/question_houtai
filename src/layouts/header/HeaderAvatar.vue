@@ -31,6 +31,9 @@ export default {
   computed: {
     ...mapGetters('account', ['user']),
   },
+  created() {
+    console.log(this.user.avatar)
+  },
   methods: {
     logout() {
       logout()
