@@ -66,6 +66,10 @@ const columns = [
     dataIndex: 'time',
   },
   {
+    title: '回答个数',
+    dataIndex: 'ans_account',
+  },
+  {
     title: '操作',
     scopedSlots: {customRender: 'action'}
   }
@@ -98,7 +102,6 @@ export default {
       var searchParams = new URLSearchParams();
       searchParams.append('question_ids', key)
       request(DELETE_QUESTION, METHOD.GET, searchParams).then((res) => {
-        console.log(res);
         if(res.data.code === 200){
           this.$message.info(res.data.msg)
           this.data_updata();
@@ -130,6 +133,7 @@ export default {
               detail: data_list[i]['question_detail'].length > 12 ? data_list[i]['question_detail'].substr(0, 12) + '...' : data_list[i]['question_detail'],
               name: data_list[i]['question_user_name'],
               time: data_list[i]['question_time'],
+              ans_account: data_list[i]['answer_count'],
               is_nimin: data_list[i]['question_is_nimin'] === '1' ? '是' : '否',
             })
           }

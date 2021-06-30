@@ -23,7 +23,7 @@
             <a-icon type="delete"/>
             删除
           </a>
-          <router-link :to="`/gaogaun/detail/${record.no}`">详情</router-link>
+          <router-link :to="`/gaoguan/detail/${record.no}`">详情</router-link>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -38,7 +38,6 @@ import StandardTable from '@/components/table/StandardTable'
 // import {METHOD, request} from "@/utils/request";
 import {GET_ALL_GAOGUAN, DELETE_GAOGUAN} from '@/services/api'
 import {METHOD, request} from "@/utils/request";
-import Cookie from "js-cookie";
 
 const columns = [
   {
@@ -90,29 +89,10 @@ export default {
     this.data_updata()
   },
   methods: {
-    downloadFile(data) {
-      // 文件导出
-      if (!data) {
-        return
-      }
-      let url = window.URL.createObjectURL(new Blob([data]),{
-        type: `application/vnd.ms-excel;charset=UTF-8` // word文档为msword,pdf文档为pdf
-      });
-      let link = document.createElement('a');
-      link.style.display = 'none';
-      link.href = url;
-      link.setAttribute('download', '测试excel.xls');
-
-      document.body.appendChild(link);
-
-      link.click()
-    },
     deleteRecord(key) {
       var searchParams = new URLSearchParams();
       searchParams.append('gaoguan_ids', key)
       request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
-        console.log(res);
-
         if(res.data.code === 200){
           this.$message.info(res.data.msg)
           this.data_updata();
@@ -123,12 +103,11 @@ export default {
     },
     export_excel(){
       if(this.selectedRows.length > 0) {
-        let delete_string = ''
+        let export_string = ''
         for(let key = 0; key < this.selectedRows.length; key ++){
-          console.log(key)
-          delete_string += this.selectedRows[key].no + '|'
+          export_string += this.selectedRows[key].no + '|'
         }
-        var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=' + delete_string;
+        var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=' + export_string;
         window.open(url);
         this.selectedRows = []
       }
@@ -141,13 +120,11 @@ export default {
       if(this.selectedRows.length > 0){
         let delete_string = ''
         for(let key = 0; key < this.selectedRows.length; key ++){
-          console.log(key)
           delete_string += this.selectedRows[key].no + '|'
         }
         var searchParams = new URLSearchParams();
         searchParams.append('gaoguan_ids', delete_string)
         request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
-          console.log(res);
           if(res.data.code === 200){
             this.$message.info(res.data.msg)
             this.data_updata();
@@ -192,8 +169,6 @@ export default {
       this.advanced = !this.advanced
     },
     reset(){
-      console.log('reset')
-      console.log(Cookie.get('Authorization'))
       this.dataSource.splice(0, this.dataSource.length);
       this.selectedRows = []
     },

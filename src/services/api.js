@@ -9,6 +9,7 @@ module.exports = {
   GOODS_COLUMNS: `${BASE_URL}/columns`,
   GET_ALL_QUESTION: `${BASE_URL}/get_all_question/`,
   GET_QUESTION_DETAIL: `${BASE_URL}/get_question_detail/`,
+  GET_ANSWER_DETAIL: `${BASE_URL}/get_anser_detail/`,
   DELETE_QUESTION: `${BASE_URL}/delete_question/`,
   GET_ALL_GAOGUAN: `${BASE_URL}/get_gaoguanmail/`,
   DELETE_GAOGUAN: `${BASE_URL}/delete_gaoguan/`,

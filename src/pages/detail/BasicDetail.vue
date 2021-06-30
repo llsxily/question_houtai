@@ -6,9 +6,11 @@
           <detail-list-item term="高管信箱标题">{{ data_dict.title }}</detail-list-item>
           <detail-list-item term="提问人真实姓名">{{ data_dict.name}}</detail-list-item>
           <detail-list-item term="是否匿名发布">{{ data_dict.is_nimin}}</detail-list-item>
+        </detail-list>
+        <detail-list layout="vertical" :col="1">
           <detail-list-item term="高管信箱内容">{{data_dict.detail}}</detail-list-item>
         </detail-list>
-        <a-button type="danger">删除该邮件</a-button>
+        <a-button type="danger" @click="deleteGAO()">删除该邮件</a-button>
       </a-card>
     </page-layout>
 </template>
@@ -16,7 +18,7 @@
 <script>
 import DetailList from '../../components/tool/DetailList'
 import PageLayout from '../../layouts/PageLayout'
-import {GET_GAOGUAN_DETAIL} from '@/services/api'
+import {DELETE_GAOGUAN, GET_GAOGUAN_DETAIL} from '@/services/api'
 import {METHOD, request} from "@/utils/request"
 
 const DetailListItem = DetailList.Item
@@ -36,6 +38,21 @@ export default {
     return {
       data_dict,
     }
+  },
+  methods:{
+    deleteGAO() {
+      var searchParams = new URLSearchParams();
+      searchParams.append('gaoguan_ids', this.$route.params.id)
+      request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
+        if(res.data.code === 200){
+          this.$message.info(res.data.msg)
+          this.$closePage('/gaogaun/detail/', '/gaoguan')
+          this.$refreshPage('/gaoguan')
+        }else{
+          this.$message.info(res.data.msg)
+        }
+      })
+    },
   },
   beforeMount() {
     var searchParams = new URLSearchParams();

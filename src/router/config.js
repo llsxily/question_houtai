@@ -42,14 +42,22 @@ const options = {
           component: () => import('@/pages/detail/QuestionBasicDetail')
         },
         {
-          path: 'gaogaun',
+          path: 'answer/:id/:parent_id',
+          name: '答案详情',
+          meta: {
+            invisible: true
+          },
+          component: () => import('@/pages/detail/AnswerBasicDetail')
+        },
+        {
+          path: 'gaoguan',
           name: '高管邮箱后台',
           meta: {
             icon: 'mail'
           },
           component: () => import('@/pages/list/GaoguanList'),
         },{
-          path: 'gaogaun/detail/:id',
+          path: 'gaoguan/detail/:id',
           name: '高管邮件详情',
           meta: {
             invisible: true

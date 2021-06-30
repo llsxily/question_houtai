@@ -2,13 +2,15 @@
     <page-layout title="问题详情页">
       <a-card :bordered="false">
         <detail-list title="问题详情" layout="vertical" :col="2">
-          <detail-list-item term="记录编号">{{ data_dict.no}}</detail-list-item>
+          <detail-list-item term="记录编号1">{{ data_dict.no}}</detail-list-item>
           <detail-list-item term="问题标题">{{ data_dict.title }}</detail-list-item>
           <detail-list-item term="提问人真实姓名">{{ data_dict.name}}</detail-list-item>
           <detail-list-item term="是否匿名发布">{{ data_dict.is_nimin}}</detail-list-item>
+        </detail-list>
+        <detail-list layout="vertical" :col="1">
           <detail-list-item term="问题详情">{{data_dict.detail}}</detail-list-item>
         </detail-list>
-        <a-button type="danger" @click="changePage()">删除该问题</a-button>
+        <a-button type="danger" @click="deleteQUE()">删除该问题</a-button>
         <a-divider style="margin-bottom: 32px"/>
         <div class="title">答案列表</div>
         <a-table
@@ -18,11 +20,11 @@
           :pagination="false"
         >
           <div slot="action" slot-scope="text, record">
-            <a @click="deleteRecord(record.answer_id)">
+            <a @click="delete_ans(record.answer_id)">
               <a-icon type="delete"/>
               删除
             </a>
-            <router-link :to="`/gaogaun/detail/${record.answer_id}`">详情</router-link>
+            <router-link :to="`/answer/${record.answer_id}/${data_dict.no}`">详情</router-link>
           </div>
         </a-table>
       </a-card>
@@ -85,17 +87,26 @@ export default {
       data_dict,
     }
   },methods:{
-    changePage(){
-      console.log(this.$parent)
+    delete_ans(key){
+      var searchParams = new URLSearchParams();
+      searchParams.append('answer_ids', key)
+      request(DELETE_ANSWER, METHOD.GET, searchParams).then((res) => {
+        if(res.data.code === 200){
+          this.$message.info(res.data.msg)
+          this.data_updata()
+        }else{
+          this.$message.info(res.data.msg)
+        }
+      })
     },
     deleteQUE() {
       var searchParams = new URLSearchParams();
       searchParams.append('question_ids', this.$route.params.id)
       request(DELETE_QUESTION, METHOD.GET, searchParams).then((res) => {
-        console.log(res);
         if(res.data.code === 200){
           this.$message.info(res.data.msg)
-          this.data_updata();
+          this.$closePage('/question/detail/', '/question')
+          this.$refreshPage('/question')
         }else{
           this.$message.info(res.data.msg)
         }
@@ -105,9 +116,8 @@ export default {
       var searchParams = new URLSearchParams();
       searchParams.append('answer_ids', key)
       request(DELETE_ANSWER, METHOD.GET, searchParams).then((res) => {
-        console.log(res);
         if(res.data.code === 200){
-          this.$message.info(res.data.msg)
+          this.$message.info('删除成功')
           this.data_updata();
         }else{
           this.$message.info(res.data.msg)
