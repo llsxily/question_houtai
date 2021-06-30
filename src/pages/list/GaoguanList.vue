@@ -2,7 +2,7 @@
   <a-card>
     <div>
       <a-space class="operator">
-        <a-button @click="addNew" type="primary">删除</a-button>
+        <a-button @click="remove" type="primary">删除</a-button>
         <a-button @click="addNew" type="primary">导出选中</a-button>
         <a-button @click="addNew" type="primary">全部导出</a-button>
       </a-space>
@@ -104,14 +104,33 @@ export default {
         }else{
           this.$message.info(res.data.msg)
         }
-
-
       })
       // this.dataSource = this.dataSource.filter(item => item.key !== key)
       // this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     remove() {
-      this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)
+      if(this.selectedRows.length > 0){
+        let delete_string = ''
+        for(let key = 0; key < this.selectedRows.length; key ++){
+          console.log(key)
+          delete_string += this.selectedRows[key].no + '|'
+        }
+        var searchParams = new URLSearchParams();
+        searchParams.append('gaoguan_ids', delete_string)
+        request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
+          console.log(res);
+          if(res.data.code === 200){
+            this.$message.info(res.data.msg)
+            this.data_updata();
+          }else{
+            this.$message.info(res.data.msg)
+          }
+        })
+      }else {
+        this.$message.info('未选中要删除的行')
+      }
+      // console.log(this.selectedRows.length)
+      // this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)
       this.selectedRows = []
     },
     data_updata(){
@@ -119,7 +138,6 @@ export default {
       var searchParams = new URLSearchParams();
       searchParams.append('page', current_page)
       request(GET_ALL_GAOGUAN, METHOD.GET, searchParams).then((res) => {
-        console.log(res.data)
         if (res.data.code === 200) {
           let data_list = res.data.data.data
           this.reset()
@@ -129,7 +147,6 @@ export default {
           this.loading = false;
           this.pagination = pagination;
           for (let i = 0; i < data_list.length; i++) {
-            console.log(data_list[i])
             dataSource.push({
               key: i,
               no: data_list[i]['gaoguan_id'],
