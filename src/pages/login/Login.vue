@@ -94,7 +94,7 @@ export default {
         console.log(user)
         setAuthorization({token: loginRes.data.token, expireAt:new Date(new Date().getTime() + 24 * 60 * 60 * 1000)})
         loadRoutes('')
-        this.$router.push('/list/question')
+        this.$router.push('/question')
         this.$message.success(loginRes.message, 3)
         // 获取路由配置
         // getRoutesConfig().then(result => {

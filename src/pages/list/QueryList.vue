@@ -2,7 +2,7 @@
   <a-card>
     <div>
       <a-space class="operator">
-        <a-button @click="addNew" type="primary">删除</a-button>
+        <a-button @click="remove()" type="primary">删除</a-button>
       </a-space>
       <standard-table
           :columns="columns"
@@ -17,11 +17,11 @@
           {{ text }}
         </div>
         <div slot="action" slot-scope="{text, record}">
-          <a @click="deleteRecord(record.key)">
+          <a @click="deleteRecord(record.no)">
             <a-icon type="delete"/>
             删除
           </a>
-          <router-link :to="`/list/question/detail/${record.key}`">详情</router-link>
+          <router-link :to="`/question/detail/${record.no}`">详情</router-link>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -34,7 +34,7 @@
 <script>
 import StandardTable from '@/components/table/StandardTable'
 // import {METHOD, request} from "@/utils/request";
-import {GET_ALL_QUESTION} from '@/services/api'
+import {GET_ALL_QUESTION, DELETE_QUESTION} from '@/services/api'
 import {METHOD, request} from "@/utils/request";
 import Cookie from "js-cookie";
 
@@ -74,15 +74,6 @@ const columns = [
 const dataSource = []
 let current_page = 1
 
-// let total_data = 0
-// let current = 0
-// let pageSize = 0
-// const pagination = computed(() => ({
-//   total: total_data,
-//   current: current,
-//   pageSize: pageSize,
-// }));
-
 export default {
   name: 'QueryList',
   components: {StandardTable},
@@ -96,16 +87,25 @@ export default {
       pagination: {},
     }
   },
-  authorize: {
-    deleteRecord: 'delete'
-  },
+  // authorize: {
+  //   deleteRecord: 'delete'
+  // },
   beforeMount() {
     this.data_updata()
   },
   methods: {
     deleteRecord(key) {
-      this.dataSource = this.dataSource.filter(item => item.key !== key)
-      this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+      var searchParams = new URLSearchParams();
+      searchParams.append('question_ids', key)
+      request(DELETE_QUESTION, METHOD.GET, searchParams).then((res) => {
+        console.log(res);
+        if(res.data.code === 200){
+          this.$message.info(res.data.msg)
+          this.data_updata();
+        }else{
+          this.$message.info(res.data.msg)
+        }
+      })
     },
     data_updata(){
       this.loading = true
@@ -146,7 +146,26 @@ export default {
       this.selectedRows = []
     },
     remove() {
-      this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)
+      if(this.selectedRows.length > 0){
+        let delete_string = ''
+        for(let key = 0; key < this.selectedRows.length; key ++){
+          console.log(key)
+          delete_string += this.selectedRows[key].no + '|'
+        }
+        var searchParams = new URLSearchParams();
+        searchParams.append('question_ids', delete_string)
+        request(DELETE_QUESTION, METHOD.GET, searchParams).then((res) => {
+          console.log(res);
+          if(res.data.code === 200){
+            this.$message.info(res.data.msg)
+            this.data_updata();
+          }else{
+            this.$message.info(res.data.msg)
+          }
+        })
+      }else {
+        this.$message.info('未选中要删除的行')
+      }
       this.selectedRows = []
     },
     onClear() {

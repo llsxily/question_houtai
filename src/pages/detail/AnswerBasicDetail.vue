@@ -1,5 +1,5 @@
 <template>
-    <page-layout title="高管邮箱详情页">
+    <page-layout title="答案详情页">
       <a-card :bordered="false">
         <detail-list title="邮件详情" layout="vertical" :col="2">
           <detail-list-item term="记录编号">{{ data_dict.no}}</detail-list-item>

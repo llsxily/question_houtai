@@ -4,7 +4,7 @@
       <a-space class="operator">
         <a-button @click="remove" type="primary">删除</a-button>
         <a-button @click="export_excel" type="primary">导出选中</a-button>
-        <a-button @click="export_excel()" type="primary">全部导出</a-button>
+        <a-button @click="export_excel_all()" type="primary">全部导出</a-button>
       </a-space>
       <standard-table
           :columns="columns"
@@ -23,7 +23,7 @@
             <a-icon type="delete"/>
             删除
           </a>
-          <router-link :to="`/list/question/detail/${record.no}`">详情</router-link>
+          <router-link :to="`/gaogaun/detail/${record.no}`">详情</router-link>
         </div>
         <template slot="statusTitle">
           <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
@@ -48,12 +48,10 @@ const columns = [
   {
     title: '问题标题',
     dataIndex: 'title',
-    scopedSlots: {customRender: 'description'}
   },
   {
     title: '问题详情',
     dataIndex: 'detail',
-    scopedSlots: {customRender: 'description'}
   },
   {
     title: '用户名',
@@ -66,7 +64,7 @@ const columns = [
   {
     title: '操作',
     scopedSlots: {customRender: 'action'}
-  }
+  },
 ]
 
 const dataSource = []
@@ -110,7 +108,6 @@ export default {
       link.click()
     },
     deleteRecord(key) {
-      console.log(key)
       var searchParams = new URLSearchParams();
       searchParams.append('gaoguan_ids', key)
       request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
@@ -123,10 +120,20 @@ export default {
           this.$message.info(res.data.msg)
         }
       })
-      // this.dataSource = this.dataSource.filter(item => item.key !== key)
-      // this.selectedRows = this.selectedRows.filter(item => item.key !== key)
     },
     export_excel(){
+      if(this.selectedRows.length > 0) {
+        let delete_string = ''
+        for(let key = 0; key < this.selectedRows.length; key ++){
+          console.log(key)
+          delete_string += this.selectedRows[key].no + '|'
+        }
+        var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=' + delete_string;
+        window.open(url);
+        this.selectedRows = []
+      }
+    },
+    export_excel_all(){
       var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=all';
       window.open(url);
     },
