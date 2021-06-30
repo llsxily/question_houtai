@@ -11,4 +11,5 @@ module.exports = {
   GET_ALL_GAOGUAN: `${BASE_URL}/get_gaoguanmail/`,
   DELETE_GAOGUAN: `${BASE_URL}/delete_gaoguan/`,
   GET_GAOGUAN_DETAIL: `${BASE_URL}/get_gaoguan_detail/`,
+  EXPORT_GAOGUAN: `${BASE_URL}/export_gaoguan/`,
 }

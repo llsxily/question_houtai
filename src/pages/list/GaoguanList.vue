@@ -3,8 +3,8 @@
     <div>
       <a-space class="operator">
         <a-button @click="addNew" type="primary">删除</a-button>
-        <a-button @click="addNew" type="primary">导出选中</a-button>
-        <a-button @click="addNew" type="primary">全部导出</a-button>
+        <a-button @click="export_excel" type="primary">导出选中</a-button>
+        <a-button @click="export_excel()" type="primary">全部导出</a-button>
       </a-space>
       <standard-table
           :columns="columns"
@@ -92,23 +92,43 @@ export default {
     this.data_updata()
   },
   methods: {
+    downloadFile(data) {
+      // 文件导出
+      if (!data) {
+        return
+      }
+      let url = window.URL.createObjectURL(new Blob([data]),{
+        type: `application/vnd.ms-excel;charset=UTF-8` // word文档为msword,pdf文档为pdf
+      });
+      let link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = url;
+      link.setAttribute('download', '测试excel.xls');
+
+      document.body.appendChild(link);
+
+      link.click()
+    },
     deleteRecord(key) {
       console.log(key)
       var searchParams = new URLSearchParams();
       searchParams.append('gaoguan_ids', key)
       request(DELETE_GAOGUAN, METHOD.GET, searchParams).then((res) => {
         console.log(res);
+
         if(res.data.code === 200){
           this.$message.info(res.data.msg)
           this.data_updata();
         }else{
           this.$message.info(res.data.msg)
         }
-
-
       })
       // this.dataSource = this.dataSource.filter(item => item.key !== key)
       // this.selectedRows = this.selectedRows.filter(item => item.key !== key)
+    },
+    export_excel(){
+      var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=all';
+      window.open(url);
     },
     remove() {
       this.dataSource = this.dataSource.filter(item => this.selectedRows.findIndex(row => row.key === item.key) === -1)

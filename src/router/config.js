@@ -27,6 +27,22 @@ const options = {
       redirect: '/login',
       children: [
         {
+          path: 'question',
+          name: '交流问题后台',
+          meta: {
+            icon: 'table'
+          },
+          component: () => import('@/pages/list/QueryList'),
+        },
+        {
+          path: 'gaogaun',
+          name: '高管邮箱后台',
+          meta: {
+            icon: 'mail'
+          },
+          component: () => import('@/pages/list/GaoguanList'),
+        },
+        {
           path: 'list',
           name: '列表页',
           meta: {
