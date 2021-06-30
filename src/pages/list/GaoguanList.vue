@@ -107,13 +107,13 @@ export default {
         for(let key = 0; key < this.selectedRows.length; key ++){
           export_string += this.selectedRows[key].no + '|'
         }
-        var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=' + export_string;
+        var url = 'http://www.llsxily.com/question/export_gaoguan/?gaoguan_ids=' + export_string;
         window.open(url);
         this.selectedRows = []
       }
     },
     export_excel_all(){
-      var url = 'http://192.168.31.233:8080/question/export_gaoguan/?gaoguan_ids=all';
+      var url = 'http://www.llsxily.com/question/export_gaoguan/?gaoguan_ids=all';
       window.open(url);
     },
     remove() {
